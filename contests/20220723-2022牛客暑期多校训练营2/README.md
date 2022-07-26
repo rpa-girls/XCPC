@@ -286,3 +286,105 @@ int main() {
 
 本题采用后者更方便。
 
+
+
+## C
+
+xf
+
+题目背景为NIM游戏，有两个玩家，n堆石子，玩家双方轮流行动，每次从一堆石子中取走一些石子，最后谁取走最后一个石子就获胜，此题问两个问题，一，胜利方想尽快胜利，失败方想尽可能拖延，问总共能进行多少回合。二，在此基础上，先手第一回合可以进行几种操作
+
+最重要的两个结论：
+
+1. 某回合异或值为0时，先手获胜
+2. 必败的一方，如果想尽可能拖延时间，则以后每一次操作中双方都只能取一个石头
+
+首先用n堆石子异或值是否为0判断先手必胜还是必败，然后分为必胜和必败情况讨论。
+
+- 先手必胜
+
+  先手会进行操作一次，使得剩余的石子数异或值为0，同时为了尽快结束游戏，先手会尽可能多的取石子，方案数为第一回合结束后的石子总数+1，方案数为能够满足操作后石子异或为0的石子堆数
+
+- 先手必败
+
+  游戏轮数比较简单，就是石头总数，而求操作数这部分有点复杂。先手从某一堆里拿走一个石头，要判断后手能不能再拿一个使得整体异或值为0
+
+```cpp
+#include<bits/stdc++.h>
+#define rep(i,st,en) for(ll i=st;i<=en;i++)
+#define REP(i,st,en) for(ll i=st;i>=en;i--)
+#define el printf("\n");
+using namespace std;
+typedef long long ll;
+typedef pair<int,int>pii;
+int n,t,a[100010];
+int lowbit(int x)
+{
+	return x&(-x);
+}
+int main()
+{
+	scanf("%d",&t);
+	while(t--){
+		scanf("%d",&n);
+		int xo=0;
+		ll sum=0;
+		rep(i,1,n)
+		{
+			scanf("%d",&a[i]);
+			xo^=a[i];
+			sum+=a[i];
+		}
+		if(xo==0)//先手必败 
+		{
+
+			int cnt=0;
+			rep(i,0,29)//二进制下第i位能否作为最低位 
+			{
+				int tmp=0,fl=0;
+                 //tmp是最低位是第i位的石子堆数
+                 //fl判断最低位是否为第i位
+				for(int j=1;j<=n;j++)
+				{
+					if(a[j]&((1<<i)))
+					{
+						tmp++;
+						if(lowbit(a[j])<(1<<i))
+							fl=1; 
+					}
+				}
+				if(fl==0)
+					cnt+=tmp;
+				//二进制最低位是第i位的石子堆数个数 
+			}
+			printf("%lld %d\n",sum,cnt);
+			//先手尽可能拖延，后手维持平衡，则每次一人拿一个石头
+			//共进行sum轮 
+		}
+		else//先手必胜 
+		{
+			int cnt=0,maxx=-1;
+			rep(i,1,n)
+			{ 
+				int tmp=a[i]-(a[i]^xo);
+				//设a[i]^xo=b，为其余n-1堆的异或值
+				//a[i]减去tmp后剩下b，再与其余n-1堆异或起来就是0了 
+				if(tmp>maxx)
+					maxx=tmp;
+			}
+			//找到最大的tmp使得从a[i]中拿走tmp个石子后剩余石子异或值为0
+			//取最大是为了先手最快结束游戏 
+			rep(i,1,n)
+				if(maxx==a[i]-(a[i]^xo))
+					cnt++;
+					
+			printf("%lld %d\n",sum-maxx+1,cnt);
+			//先手一下拿走maxx个，使得所有石子异或值为0
+			//后手为了拖延只能一个一个拿，进入必败循环 
+		}
+	}
+	return 0;
+}
+
+```
+

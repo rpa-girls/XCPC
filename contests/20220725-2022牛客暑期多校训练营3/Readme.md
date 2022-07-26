@@ -253,3 +253,61 @@ int main(){
 }
 ```
 
+## C
+
+xf
+
+一眼看上去像是某道在洛谷上做过的题，但是算算复杂度感觉有点悬（）yh交了一发之后俺寻思试一下结果暴力骗过了（）
+
+题目不难理解，就是给一堆字符串，问如何拼接才能使得拼接成的字符串字典序最小
+
+直接使用string类的排序方法，按照字符串ab<ba的关系排序即可（正解说要用stable_sort或者tries啥的，但是估计数据出水了）
+
+```cpp
+#include<bits/stdc++.h>
+#define rep(i,st,en) for(int i=st;i<=en;i++)
+#define REP(i,st,en) for(int i=st;i>=en;i--)
+#define el printf("\n");
+
+using namespace std;
+typedef long long ll;
+typedef pair<int,int> pii;
+bool cmp(string a,string b)
+{
+	return a+b<b+a;
+}
+int n;
+string s[2000100];
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin>>n;
+	rep(i,0,n-1)
+		cin>>s[i];
+		
+	sort(s,s+n,cmp);
+	rep(i,0,n-1)
+		cout<<s[i];
+	return 0;
+}
+```
+
+
+
+## J
+
+xf占个坑
+
+这题最大的难点在于看懂题目描述（逃）
+
+题目大意为给一个城市的路网，其中直行、左转、调头都需要等红灯，右转不需要，求从起始道路到目标道路最少要等多少红灯
+
+每条道路设为一个点，某条道到另一条道设为一条边，然后右转的边权设为0，其余设为1，然后跑Dij求最短路即可
+
+（不知道为啥调崩了QAQ）
+
+```cpp
+
+```
+
