@@ -388,3 +388,73 @@ int main()
 
 ```
 
+## L
+
+xf
+
+题意为有n个世界，m个节点，每一个世界中有一些条有向边，在每一个世界，主角可以要么待在原来的节点，要么沿着某条边走一次，求从节点1走到节点m最少需要的连续世界数。
+
+考虑dp，$$dp[i][j]$$可表示为到世界i为止，抵达节点j所需的最少世界数，对于世界i中的边<u,v>，有两种转移方式，$dp[i][v]=min(dp[i-1][v]+1,dp[i-1][u]+1)$
+
+原始版：（占坑）
+
+```cpp
+
+```
+
+可以使用滚动数组优化成以下写法：
+
+```cpp
+#include<bits/stdc++.h>
+#define rep(i,st,en) for(int i=st;i<=en;i++)
+#define REP(i,st,en) for(int i=st;i>=en;i--)
+#define el printf("\n");
+using namespace std;
+typedef long long ll;
+typedef pair<int,int>pii;
+int n,m,l,u,v;
+int dp[10010],dp2[10010];
+//dp[i]代表到达节点i最少需要的世界数
+//dp2[i]代表在枚举到某一世界时，到达节点i最少需要的世界数（中间过程） 
+int main()
+{
+	scanf("%d%d",&n,&m);
+	rep(i,2,m)
+	{
+		dp[i]=99999999;
+		dp2[i]=99999999;
+	}
+	dp[1]=1,dp2[1]=1;
+	
+	rep(i,1,n)
+	{
+		scanf("%d",&l);
+	
+		rep(i,2,m-1)
+			if(dp[i]!=99999999)
+				dp[i]++;//能走到的话就++
+		//先算基础的不走的情况 
+		//第1和第m个节点不需要走，只需要看当前答案与从其他点走过来的哪个更小即可 
+		rep(i,1,m)
+			dp2[i]=dp[i]; 
+		//先复制给中间值
+		
+		while(l--){
+			scanf("%d%d",&u,&v);
+			dp2[v]=min(dp2[v],dp[u]);
+			//从点不变转移而来的方案、从u转移来的方案 
+		}
+		// 再算走的情况，比较一下从u到v或者在v不动哪个需要世界数少		
+		
+		for(int i=1;i<=m;i++)
+			dp[i]=min(dp[i],dp2[i]);
+		
+	}
+	if(dp[m]==99999999)
+		printf("-1");
+	else
+		printf("%d",dp[m]);
+	return 0;
+}
+```
+
