@@ -255,6 +255,88 @@ int main() {
 
 
 
+## I - let fat tension
+
+### zhn
+
+题意：给定 $n$ 个 $k$ 维向量 $\{X_i\}$，和 $n$ 个 $d$ 维向量 $\{Y_i\}$，求 $Y'_j=\sum_{i=1}^n \dfrac{X_i\cdot X_j}{|X_i||X_j|} $ ,其中$ n≤1×10^4,d≤50,k\leq 50。$
+
+这题一开始看到给的式子，就想到了$cos$值，然后就一直被卡着了，但其实如果把求和式子里面的的两个向量看成两个向量，就可以化成矩阵相乘的形式，可以大大降低时间复杂度。
+
+感觉不太好想到变成一堆矩阵的形式。
+
+~~很喜欢张宇老师的一句话，要用向量的思维来研究矩阵，反过来一样，我是铸币~~
+
+代码
+
+```c++
+#include <bits/stdc++.h>
+using namespace std;
+const int N=1e4+10;
+int n,k,d;
+int a[N][55],b[N][55];
+double a_new[N][55],a_new_T[55][N];//转置与原本矩阵
+double temp[55][55],ans[N][55];
+inline int read(){
+    int x=0,f=1;
+    char ch=getchar();
+    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline void solve(){
+    for(int i=1;i<=k;i++){
+        for(int j=1;j<=d;j++){
+            for(int o=1;o<=n;o++){
+                temp[i][j]+=a_new_T[i][o]*(double)(b[o][j]);
+            }
+        }
+    }
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=d;j++){
+            for(int o=1;o<=k;o++){
+                ans[i][j]+=a_new[i][o]*temp[o][j];
+            }
+        }
+    }
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=d;j++){
+            printf("%.10lf ",ans[i][j]);
+        }
+        cout<<endl;
+    }
+    return ;
+}
+int main(){
+    n=read();k=read();d=read();
+    for(int i=1;i<=n;i++)
+        for(int j=1;j<=k;j++)
+            a[i][j]=read();
+
+    for(int i=1;i<=n;i++)
+        for(int j=1;j<=d;j++)
+            b[i][j]=read();
+
+    for(int i=1;i<=n;i++){
+        double len=0.000;
+        for(int j=1;j<=k;j++){
+            len+=(double)(a[i][j])*a[i][j];
+        }
+        len=sqrt(len);
+        for(int j=1;j<=k;j++){
+            a_new[i][j]=(double)a[i][j]/len;
+            a_new_T[j][i]=a_new[i][j];
+        }
+    }
+    solve();
+    return 0;
+}
+```
+
+
+
+
+
 ## J
 
 ### yh
@@ -455,84 +537,6 @@ int main()
 	else
 		printf("%d",dp[m]);
 	return 0;
-}
-```
-
-## I let fat tension
-
-### zhn
-
-题意：给定 $n$ 个 $k$ 维向量 $\{X_i\}$，和 $n$ 个 $d$ 维向量 $\{Y_i\}$，求 $Y'_j=\sum_{i=1}^n \dfrac{X_i\cdot X_j}{|X_i||X_j|} $ ,其中$ n≤1×10^4,d≤50,k\leq 50。$
-
-这题一开始看到给的式子，就想到了$cos$值，然后就一直被卡着了，但其实如果把求和式子里面的的两个向量看成两个向量，就可以化成矩阵相乘的形式，可以大大降低时间复杂度。
-
-感觉不太好想到变成一堆矩阵的形式。
-
-~~很喜欢张宇老师的一句话，要用向量的思维来研究矩阵，反过来一样，我是铸币~~
-
-代码
-
-```c++
-#include <bits/stdc++.h>
-using namespace std;
-const int N=1e4+10;
-int n,k,d;
-int a[N][55],b[N][55];
-double a_new[N][55],a_new_T[55][N];//转置与原本矩阵
-double temp[55][55],ans[N][55];
-inline int read(){
-    int x=0,f=1;
-    char ch=getchar();
-    while(ch<'0'||ch>'9'){if(ch=='-')f=-1;ch=getchar();}
-    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
-    return x*f;
-}
-inline void solve(){
-    for(int i=1;i<=k;i++){
-        for(int j=1;j<=d;j++){
-            for(int o=1;o<=n;o++){
-                temp[i][j]+=a_new_T[i][o]*(double)(b[o][j]);
-            }
-        }
-    }
-    for(int i=1;i<=n;i++){
-        for(int j=1;j<=d;j++){
-            for(int o=1;o<=k;o++){
-                ans[i][j]+=a_new[i][o]*temp[o][j];
-            }
-        }
-    }
-    for(int i=1;i<=n;i++){
-        for(int j=1;j<=d;j++){
-            printf("%.10lf ",ans[i][j]);
-        }
-        cout<<endl;
-    }
-    return ;
-}
-int main(){
-    n=read();k=read();d=read();
-    for(int i=1;i<=n;i++)
-        for(int j=1;j<=k;j++)
-            a[i][j]=read();
-
-    for(int i=1;i<=n;i++)
-        for(int j=1;j<=d;j++)
-            b[i][j]=read();
-
-    for(int i=1;i<=n;i++){
-        double len=0.000;
-        for(int j=1;j<=k;j++){
-            len+=(double)(a[i][j])*a[i][j];
-        }
-        len=sqrt(len);
-        for(int j=1;j<=k;j++){
-            a_new[i][j]=(double)a[i][j]/len;
-            a_new_T[j][i]=a_new[i][j];
-        }
-    }
-    solve();
-    return 0;
 }
 ```
 
