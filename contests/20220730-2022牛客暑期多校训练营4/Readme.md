@@ -10,6 +10,57 @@
 
 # 题解
 
+## A
+
+### zhn
+
+本题一定是选择一个最优的排序，我们可以根据最优情况下的相邻两个元素，得出偏序大小关系，之后用简单dp从后往前跑一下就好
+
+```c++
+#include <bits/stdc++.h>
+#define int long long
+using namespace std;
+const int N=1e5+8;
+int n,m;
+double ans[25];
+struct Node{
+    int w;
+    double p;
+}a[N];
+inline int read(){
+    int x=0,f=1;
+    char ch=getchar();
+    while(ch<'0'||ch>'9') {if(ch=='-')f=-1;ch=getchar();}
+    while(ch>='0'&&ch<='9'){x=x*10+ch-'0';ch=getchar();}
+    return x*f;
+}
+inline bool cmp(Node x,Node y){
+    double x1=x.w+x.p*y.w;
+    double x2=y.w+y.p*x.w;
+    return x1<x2;
+}
+signed main(){
+    n=read();m=read();
+    for(int i=1;i<=n;i++) a[i].w=read();
+    for(int i=1;i<=n;i++) {
+        int q=read();
+        a[i].p=(double)q/10000;
+    }
+
+    //按照奇怪的方式排序
+    sort(a+1,a+n+1,cmp);
+    memset(ans,0,sizeof(ans));
+    for(int i=1;i<=n;i++){
+        for(int j=m;j>=1;j--){
+            ans[j]=max(ans[j],ans[j-1]*a[i].p+a[i].w);
+        }
+    }
+    printf("%.8lf",ans[m]);
+    return 0;
+}
+
+```
+
 
 
 ## D
