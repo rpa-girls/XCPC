@@ -63,6 +63,18 @@ signed main(){
 
 
 
+## B
+
+### yh-补题
+
+wrnm，tmd，精度他妈的有毛病。
+
+double 全换 long double 就过了。
+
+浪费我俩小时。
+
+我日他妈。
+
 
 
 ## C
